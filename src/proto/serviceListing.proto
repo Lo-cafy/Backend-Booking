@@ -1,0 +1,166 @@
+syntax = "proto3";
+
+package listing;
+
+service ListingService {
+    // Basic listing operations
+    rpc GetService (GetServiceRequest) returns (ServiceResponse);
+    rpc GetServiceDetails (GetServiceDetailsRequest) returns (ServiceDetailsResponse);
+    rpc ValidateService (ValidateServiceRequest) returns (ValidateServiceResponse);
+
+    // Availability management
+    rpc UpdateAvailability (UpdateAvailabilityRequest) returns (UpdateAvailabilityResponse);
+    rpc GetServiceAvailability (GetServiceAvailabilityRequest) returns (GetServiceAvailabilityResponse);
+
+    // Batch operations
+    rpc GetMultipleServices (GetMultipleServicesRequest) returns (GetMultipleServicesResponse);
+}
+
+// Request/Response Messages
+message GetServiceRequest {
+    string service_id = 1;
+}
+
+message ServiceResponse {
+    string service_id = 1;
+    string title = 2;
+    string description = 3;
+    double price = 4;
+    string price_type = 5;
+    string provider_id = 6;
+    string category_id = 7;
+    string location_text = 8;
+    double rating = 9;
+    int32 review_count = 10;
+    bool is_remote_service = 11;
+    bool is_active = 12;
+    string status = 13;
+    string created_at = 14;
+}
+
+message GetServiceDetailsRequest {
+    string service_id = 1;
+    bool include_photos = 2;
+    bool include_availability = 3;
+    bool include_reviews = 4;
+}
+
+message ServiceDetailsResponse {
+    ServiceResponse basic_info = 1;
+    repeated ServicePhoto photos = 2;
+    repeated AvailabilitySlot availability = 3;
+    repeated ReviewResponse reviews = 4;
+    CategoryResponse category = 5;
+    ProviderResponse provider = 6;
+}
+
+message ValidateServiceRequest {
+    string service_id = 1;
+    string date = 2;
+    string start_time = 3;
+    string end_time = 4;
+    int32 guests = 5;
+}
+
+message ValidateServiceResponse {
+    bool is_available = 1;
+    double total_price = 2;
+    string message = 3;
+    repeated TimeSlot available_slots = 4;
+    ServiceResponse service_info = 5;
+}
+
+message UpdateAvailabilityRequest {
+    string service_id = 1;
+    string date = 2;
+    string start_time = 3;
+    string end_time = 4;
+    bool is_available = 5;
+    int32 max_bookings = 6;
+    double special_price = 7;
+    string reason = 8;
+}
+
+message UpdateAvailabilityResponse {
+    bool success = 1;
+    string message = 2;
+    string availability_id = 3;
+}
+
+message GetServiceAvailabilityRequest {
+    string service_id = 1;
+    string start_date = 2;
+    string end_date = 3;
+}
+
+message GetServiceAvailabilityResponse {
+    repeated AvailabilitySlot availability_slots = 1;
+    string service_id = 2;
+}
+
+message GetMultipleServicesRequest {
+    repeated string service_ids = 1;
+}
+
+message GetMultipleServicesResponse {
+    repeated ServiceResponse services = 1;
+}
+
+// Supporting Messages
+message ServicePhoto {
+    string photo_id = 1;
+    string url = 2;
+    bool is_primary = 3;
+    int32 display_order = 4;
+}
+
+message AvailabilitySlot {
+    string availability_id = 1;
+    string date = 2;
+    string start_time = 3;
+    string end_time = 4;
+    bool is_available = 5;
+    int32 max_bookings = 6;
+    int32 current_bookings = 7;
+    double special_price = 8;
+    string available_day = 9;
+}
+
+message ReviewResponse {
+    string review_id = 1;
+    string reviewer_id = 2;
+    double rating = 3;
+    string title = 4;
+    string comment = 5;
+    double quality_rating = 6;
+    double communication_rating = 7;
+    double timeliness_rating = 8;
+    double value_rating = 9;
+    bool is_verified_purchase = 10;
+    string created_at = 11;
+    string reviewer_name = 12;
+}
+
+message CategoryResponse {
+    string category_id = 1;
+    string name = 2;
+    string slug = 3;
+    string description = 4;
+    string parent_category_id = 5;
+}
+
+message ProviderResponse {
+    string provider_id = 1;
+    string business_name = 2;
+    string contact_email = 3;
+    string contact_phone = 4;
+    double overall_rating = 5;
+}
+
+message TimeSlot {
+    string date = 1;
+    string start_time = 2;
+    string end_time = 3;
+    double price = 4;
+    bool available = 5;
+}

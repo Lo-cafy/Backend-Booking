@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    // Environment
+    "target": "ES2020",
+    "module": "CommonJS",                // Use CommonJS for Node backend
+    "moduleResolution": "node",
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    // TypeScript strictness
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "skipLibCheck": true,
+
+    // Node interop
+    "esModuleInterop": true,             // ✅ allows `import express from "express"`
+    "forceConsistentCasingInFileNames": true,
+
+    // Source maps and declarations
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true
+  },
+  "include": ["src/**/*"]
+}

@@ -1,0 +1,635 @@
+{
+  "info": {
+    "name": "Booking API - Standalone Testing",
+    "description": "Complete booking system API testing with realistic test data",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "bookingId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "1001",
+      "type": "string"
+    },
+    {
+      "key": "serviceId", 
+      "value": "2001",
+      "type": "string"
+    },
+    {
+      "key": "providerId",
+      "value": "3001",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🏥 Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        },
+        "description": "Check if the API server is running"
+      },
+      "response": []
+    },
+    {
+      "name": "📋 Booking Operations",
+      "item": [
+        {
+          "name": "➕ Create Booking - House Cleaning",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data && response.data.booking_id) {",
+                  "        pm.collectionVariables.set('bookingId', response.data.booking_id);",
+                  "        console.log('Booking ID saved:', response.data.booking_id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": 1001,\n  \"service_id\": 2001,\n  \"start_time\": \"2025-01-15T10:00:00Z\",\n  \"end_time\": \"2025-01-15T11:00:00Z\",\n  \"booking_title\": \"House Cleaning Service\",\n  \"booking_description\": \"Deep cleaning of 3-bedroom apartment\",\n  \"service_address\": \"123 Main St, City, State 12345\",\n  \"meeting_instructions\": \"Ring doorbell twice\",\n  \"special_instructions\": \"Please use eco-friendly products\",\n  \"booking_source\": \"web\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings"]
+            },
+            "description": "Create a new booking for house cleaning service"
+          },
+          "response": []
+        },
+        {
+          "name": "➕ Create Booking - Plumbing Repair",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": 1002,\n  \"service_id\": 2002,\n  \"start_time\": \"2025-01-16T14:00:00Z\",\n  \"end_time\": \"2025-01-16T16:00:00Z\",\n  \"booking_title\": \"Plumbing Repair\",\n  \"booking_description\": \"Fix leaking kitchen sink\",\n  \"service_address\": \"456 Oak Avenue, Townsville\",\n  \"meeting_instructions\": \"Use back entrance\",\n  \"special_instructions\": \"Water shutoff is under sink\",\n  \"booking_source\": \"mobile_app\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings"]
+            },
+            "description": "Create another booking for plumbing service"
+          },
+          "response": []
+        },
+        {
+          "name": "➕ Create Booking - Electrical Work",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": 1003,\n  \"service_id\": 2003,\n  \"start_time\": \"2025-01-17T09:00:00Z\",\n  \"end_time\": \"2025-01-17T12:00:00Z\",\n  \"booking_title\": \"Electrical Installation\",\n  \"booking_description\": \"Install new ceiling lights in living room\",\n  \"service_address\": \"789 Pine Road, City Center\",\n  \"meeting_instructions\": \"Park in visitor parking\",\n  \"special_instructions\": \"Bring ladder\",\n  \"booking_source\": \"web\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings"]
+            },
+            "description": "Create booking for electrical work"
+          },
+          "response": []
+        },
+        {
+          "name": "📖 Get Booking by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}"]
+            },
+            "description": "Get a specific booking by its ID"
+          },
+          "response": []
+        },
+        {
+          "name": "✏️ Update Booking",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"booking_title\": \"Updated House Cleaning Service\",\n  \"booking_description\": \"Updated description for deep cleaning with additional tasks\",\n  \"service_address\": \"456 New St, City, State 12345\",\n  \"meeting_instructions\": \"Updated: Ring doorbell three times and wait\",\n  \"special_instructions\": \"Updated: Please use only eco-friendly products\",\n  \"provider_notes\": \"Customer requested extra attention to kitchen area\",\n  \"user_notes\": \"Will be working from home during service\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}"]
+            },
+            "description": "Update booking details"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔍 Search & Filter",
+      "item": [
+        {
+          "name": "🔎 Search All Bookings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/search",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "search"]
+            },
+            "description": "Search all bookings without filters"
+          },
+          "response": []
+        },
+        {
+          "name": "👤 Search by User ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/search?user_id=1001",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "search"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "1001"
+                }
+              ]
+            },
+            "description": "Search bookings by user ID 1001"
+          },
+          "response": []
+        },
+        {
+          "name": "🏢 Search by Provider ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/search?provider_id=3001",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "search"],
+              "query": [
+                {
+                  "key": "provider_id",
+                  "value": "3001"
+                }
+              ]
+            },
+            "description": "Search bookings by provider ID 3001"
+          },
+          "response": []
+        },
+        {
+          "name": "📊 Search by Status - Pending",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/search?status=pending",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "search"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "pending"
+                }
+              ]
+            },
+            "description": "Search bookings with pending status"
+          },
+          "response": []
+        },
+        {
+          "name": "📅 Search by Date",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/search?booking_date=2025-01-15",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "search"],
+              "query": [
+                {
+                  "key": "booking_date",
+                  "value": "2025-01-15"
+                }
+              ]
+            },
+            "description": "Search bookings for January 15, 2025"
+          },
+          "response": []
+        },
+        {
+          "name": "🔗 Combined Search",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/search?user_id=1001&status=pending&limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "search"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "1001"
+                },
+                {
+                  "key": "status",
+                  "value": "pending"
+                },
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
+              ]
+            },
+            "description": "Search with multiple filters combined"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "👥 User & Provider Bookings",
+      "item": [
+        {
+          "name": "👤 Get User 1001 Bookings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/user/1001?limit=10&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "user", "1001"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            },
+            "description": "Get all bookings for user ID 1001"
+          },
+          "response": []
+        },
+        {
+          "name": "👤 Get User 1002 Bookings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/user/1002",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "user", "1002"]
+            },
+            "description": "Get all bookings for user ID 1002"
+          },
+          "response": []
+        },
+        {
+          "name": "🏢 Get Provider 3001 Bookings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/provider/3001?limit=10&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "provider", "3001"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            },
+            "description": "Get all bookings for provider ID 3001"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔄 Booking Lifecycle",
+      "item": [
+        {
+          "name": "✅ Confirm Booking",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": 1001\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/confirm",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "confirm"]
+            },
+            "description": "Confirm a pending booking"
+          },
+          "response": []
+        },
+        {
+          "name": "🚀 Start Service",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/start",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "start"]
+            },
+            "description": "Start the service"
+          },
+          "response": []
+        },
+        {
+          "name": "✅ Complete Booking",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/complete",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "complete"] 
+            },
+            "description": "Complete the booking"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "❌ Cancellation",
+      "item": [
+        {
+          "name": "🚫 Cancel Booking (User Request)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cancelled_by\": 1001,\n  \"reason\": \"user_request\",\n  \"notes\": \"Change of plans, need to reschedule\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}"]
+            },
+            "description": "Cancel booking by user"
+          },
+          "response": []
+        },
+        {
+          "name": "🚫 Cancel Booking (Provider Unavailable)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cancelled_by\": 3001,\n  \"reason\": \"provider_unavailable\",\n  \"notes\": \"Provider is sick today\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}"]
+            },
+            "description": "Cancel booking by provider"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🧪 Test Scenarios",
+      "item": [
+        {
+          "name": "📋 Complete Lifecycle Test",
+          "item": [
+            {
+              "name": "1️⃣ Create Test Booking",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (pm.response.code === 201) {",
+                      "    const response = pm.response.json();",
+                      "    if (response.data && response.data.booking_id) {",
+                      "        pm.collectionVariables.set('bookingId', response.data.booking_id);",
+                      "        console.log('Test Booking ID saved:', response.data.booking_id);",
+                      "    }",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user_id\": 1005,\n  \"service_id\": 2005,\n  \"start_time\": \"2025-01-18T14:00:00Z\",\n  \"end_time\": \"2025-01-18T15:00:00Z\",\n  \"booking_title\": \"Test Lifecycle Booking\",\n  \"booking_description\": \"Testing complete booking lifecycle\",\n  \"booking_source\": \"api\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/bookings",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "bookings"]
+                }
+              }
+            },
+            {
+              "name": "2️⃣ Confirm Booking",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user_id\": 1005\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/confirm",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "bookings", "{{bookingId}}", "confirm"]
+                }
+              }
+            },
+            {
+              "name": "3️⃣ Start Service",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/start",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "bookings", "{{bookingId}}", "start"]
+                }
+              }
+            },
+            {
+              "name": "4️⃣ Complete Booking",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/complete",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "bookings", "{{bookingId}}", "complete"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "❌ Error Testing",
+          "item": [
+            {
+              "name": "🚫 Invalid Booking ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/bookings/99999",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "bookings", "99999"]
+                },
+                "description": "Test with non-existent booking ID"
+              }
+            },
+            {
+              "name": "🚫 Missing Required Fields",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"booking_title\": \"Invalid Booking\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/bookings",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "bookings"]
+                },
+                "description": "Test with missing required fields"
+              }
+            },
+            {
+              "name": "🚫 Invalid Cancellation Reason",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"cancelled_by\": 1001,\n  \"reason\": \"invalid_reason\",\n  \"notes\": \"This should fail\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/bookings/{{bookingId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "bookings", "{{bookingId}}"]
+                },
+                "description": "Test with invalid cancellation reason"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
