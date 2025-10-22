@@ -3,7 +3,7 @@ import * as protoLoader from '@grpc/proto-loader';
 import path from 'path';
 
 // Path to the proto file
-const PROTO_PATH = path.join(__dirname, '../proto/serviceListing.proto');
+const PROTO_PATH = path.join(__dirname, '../proto/listing.proto');
 
 // Load proto definition
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {

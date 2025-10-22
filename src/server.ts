@@ -14,7 +14,7 @@ app.listen(PORT, () => {
 });
 
 // ------------------- gRPC SERVER -------------------
-const PROTO_PATH = path.join(__dirname, "proto/serviceListing.proto");
+const PROTO_PATH = path.join(__dirname, "proto/listing.proto");
 
 const packageDef = protoLoader.loadSync(PROTO_PATH, {
   keepCase: true,
@@ -37,16 +37,3 @@ grpcServer.addService(proto.ListingService.service, {
     });
   },
 });
-
-grpcServer.bindAsync(
-  "0.0.0.0:50051",
-  grpc.ServerCredentials.createInsecure(),
-  (err, port) => {
-    if (err) {
-      console.error("Failed to start gRPC server:", err);
-      return;
-    }
-    console.log(`🛠️ gRPC server running on port ${port}`);
-    grpcServer.start();
-  }
-);
