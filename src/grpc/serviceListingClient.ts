@@ -16,9 +16,18 @@ const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
 
 const listingProto = grpc.loadPackageDefinition(packageDefinition).listing as any;
 
-// Create client instance (connect to your friend’s gRPC server)
+// -------------------
+// THE FIX IS HERE
+// -------------------
+// 1. Get the address from an environment variable
+//    Default to 'localhost:50051' so it still works on your local computer
+const GRPC_SERVER_ADDRESS = process.env.GRPC_SERVER_ADDRESS || 'localhost:50051';
+
+console.log(`gRPC client attempting to connect to: ${GRPC_SERVER_ADDRESS}`);
+
+// 2. Use that variable here
 const client = new listingProto.ListingService(
-  'localhost:50051', // your friend's gRPC server address
+  GRPC_SERVER_ADDRESS,
   grpc.credentials.createInsecure()
 );
 
