@@ -11,6 +11,11 @@ app.listen(PORT, () => {
   console.log(`🚀 Express server running on port ${PORT}`);
   // Test DB connection without blocking server start
   testConnection();
+
+  // Helpful URLs for developers
+  const host = process.env.HOST || "localhost";
+  console.log(`📚 Swagger UI: http://${host}:${PORT}/api/docs`);
+  console.log(`📄 Swagger JSON: http://${host}:${PORT}/api/docs.json`);
 });
 
 // ------------------- gRPC SERVER -------------------

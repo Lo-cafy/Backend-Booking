@@ -1,8 +1,12 @@
-import * as grpc from '@grpc/grpc-js';
-import * as protoLoader from '@grpc/proto-loader';
-import path from 'path';
+﻿import * as grpc from "@grpc/grpc-js";
+import * as protoLoader from "@grpc/proto-loader";
+import path from "path";
+import fs from "fs";
 
-const PROTO_PATH = path.join(__dirname, '../proto/listing.proto');
+// Load proto file with fallback paths
+const candidateProto1 = path.join(__dirname, "../proto/listing.proto");
+const candidateProto2 = path.join(process.cwd(), "proto", "listing.proto");
+const PROTO_PATH = fs.existsSync(candidateProto1) ? candidateProto1 : candidateProto2;
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
   keepCase: true,
@@ -14,20 +18,20 @@ const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
 
 const listingProto = grpc.loadPackageDefinition(packageDefinition).listing as any;
 
-// -------------------
-// ⬇ THIS IS THE FIX ⬇
-// -------------------
+// Server configuration with Railway proxy address
+const GRPC_ADDRESS = 'switchyard.proxy.rlwy.net:15531';
 
-// Get the address from environment variables
-// Default to 'localhost:50051' for your local computer
-const GRPC_SERVER_ADDRESS = process.env.GRPC_SERVER_ADDRESS || 'localhost:50051';
+console.log(`Initializing gRPC client for: ${GRPC_ADDRESS}`);
 
-console.log(`gRPC client attempting to connect to: ${GRPC_SERVER_ADDRESS}`);
-
-// Use the variable here instead of "localhost:50051"
-const client = new listingProto.ListingService(
-  GRPC_SERVER_ADDRESS,
-  grpc.credentials.createInsecure()
+// Create and configure the gRPC client
+export const listingClient = new listingProto.ListingService(
+  GRPC_ADDRESS,
+  grpc.credentials.createInsecure(),
+  {
+    "grpc.keepalive_time_ms": 120000,
+    "grpc.keepalive_timeout_ms": 20000,
+    "grpc.http2.min_time_between_pings_ms": 120000,
+    "grpc.enable_retries": 1,
+    "grpc.max_reconnect_backoff_ms": 5000
+  }
 );
-
-export default client;

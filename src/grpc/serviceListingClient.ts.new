@@ -1,0 +1,39 @@
+import * as grpc from '@grpc/grpc-js';
+import * as protoLoader from '@grpc/proto-loader';
+import path from 'path';
+import fs from 'fs';
+
+// Load proto file with fallback paths
+const candidateProto1 = path.join(__dirname, '../proto/listing.proto');
+const candidateProto2 = path.join(process.cwd(), 'proto', 'listing.proto');
+const PROTO_PATH = fs.existsSync(candidateProto1) ? candidateProto1 : candidateProto2;
+
+const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
+  keepCase: true,
+  longs: String,
+  enums: String,
+  defaults: true,
+  oneofs: true,
+});
+
+const listingProto = grpc.loadPackageDefinition(packageDefinition).listing as any;
+
+// Server configuration from environment or defaults
+const GRPC_HOST = process.env.GRPC_HOST || 'back-end-servicelisting-production-be0c.up.railway.app';
+const GRPC_PORT = process.env.GRPC_PORT || '50052'; // Port from health check
+const GRPC_ADDRESS = `${GRPC_HOST}:${GRPC_PORT}`;
+
+console.log(`Initializing gRPC client for: ${GRPC_ADDRESS}`);
+
+// Create and configure the gRPC client
+export const listingClient = new listingProto.ListingService(
+  GRPC_ADDRESS,
+  grpc.credentials.createInsecure(),
+  {
+    'grpc.keepalive_time_ms': 120000,
+    'grpc.keepalive_timeout_ms': 20000,
+    'grpc.http2.min_time_between_pings_ms': 120000,
+    'grpc.enable_retries': 1,
+    'grpc.max_reconnect_backoff_ms': 5000
+  }
+);
